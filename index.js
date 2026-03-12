@@ -9,7 +9,7 @@ const app = express();
 // Conectar a MongoDB
 connectDB();
 
-const PORT = 3400;
+const PORT = process.env.PORT || 3000;
 
 // Middleware para parsear JSON
 app.use(express.json());
