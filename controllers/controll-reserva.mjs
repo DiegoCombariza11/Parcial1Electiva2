@@ -7,7 +7,7 @@ import Recurso from '../models/recurso.mjs';
 
 async function createReserva(req, res) {
     try {
-        const { recurso, solicitante, fecha, horaInicio, horaFin, motivo } = req.body;
+        const { recurso, solicitante, fecha, horaInicio, horaFin } = req.body;
 
         const recursoExiste = await Recurso.findById(recurso);
         if (!recursoExiste || !recursoExiste.isActive) {
@@ -38,7 +38,7 @@ async function createReserva(req, res) {
             });
         }
 
-        const reserva = new Reserva({ recurso, solicitante, fecha, horaInicio, horaFin, motivo });
+        const reserva = new Reserva({ recurso, solicitante, fecha, horaInicio, horaFin });
         await reserva.save();
         await reserva.populate('recurso');
 

@@ -6,6 +6,9 @@ async function createRecurso(req, res) {
         await recurso.save();
         res.status(201).json({ state: true, message: 'Recurso creado exitosamente', data: recurso });
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ state: false, message: `Ya existe un recurso con el ID ${req.body.id}. Por favor usa un ID diferente.` });
+        }
         res.status(400).json({ state: false, message: error.message });
     }
 }

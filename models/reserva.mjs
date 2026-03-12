@@ -26,11 +26,6 @@ const reservaSchema = new mongoose.Schema({
         required: [true, 'La hora de fin es obligatoria'],
         match: [/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Formato de hora inválido (HH:MM)']
     },
-    motivo: {
-        type: String,
-        trim: true,
-        maxlength: [300, 'El motivo no puede exceder 300 caracteres']
-    }
 }, { timestamps: true });
 
 const Reserva = mongoose.model('Reserva', reservaSchema);

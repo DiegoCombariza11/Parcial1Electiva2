@@ -4,9 +4,13 @@
 
 const API = '/api';
 
-function mostrarAlerta(mensaje, tipo = 'success') {
+function mostrarAlerta(mensaje, esError = false) {
     const alerta = document.getElementById('alerta');
-    alerta.className = `alert alert-${tipo}`;
+    alerta.style.backgroundColor = esError ? '#1a1a1a' : '#F5A800';
+    alerta.style.color = esError ? '#F5A800' : '#1a1a1a';
+    alerta.style.padding = '12px 16px';
+    alerta.style.borderRadius = '6px';
+    alerta.style.fontWeight = '600';
     alerta.textContent = mensaje;
     alerta.classList.remove('d-none');
     setTimeout(() => alerta.classList.add('d-none'), 4000);
@@ -91,7 +95,7 @@ async function cargarReservas() {
         const tbody = document.getElementById('tabla-reservas');
 
         if (!data.data || data.data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay reservas registradas.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No hay reservas registradas.</td></tr>';
             return;
         }
 
@@ -102,12 +106,11 @@ async function cargarReservas() {
                 <td>${formatearFecha(r.fecha)}</td>
                 <td>${r.horaInicio}</td>
                 <td>${r.horaFin}</td>
-                <td>${r.motivo || '—'}</td>
             </tr>
         `).join('');
     } catch {
         document.getElementById('tabla-reservas').innerHTML =
-            '<tr><td colspan="6" class="text-center text-danger">Error al cargar reservas.</td></tr>';
+            '<tr><td colspan="5" class="text-center text-danger">Error al cargar reservas.</td></tr>';
     }
 }
 
@@ -130,15 +133,15 @@ document.getElementById('form-recurso').addEventListener('submit', async (e) => 
         const data = await res.json();
 
         if (!res.ok) {
-            mostrarAlerta(data.message, 'danger');
+            mostrarAlerta(data.message, true);
             return;
         }
 
-        mostrarAlerta('Recurso creado exitosamente.', 'success');
+        mostrarAlerta('Recurso creado exitosamente.');
         e.target.reset();
         cargarRecursos();
     } catch {
-        mostrarAlerta('Error al crear el recurso.', 'danger');
+        mostrarAlerta('Error al crear el recurso.', true);
     }
 });
 
@@ -149,8 +152,7 @@ document.getElementById('form-reserva').addEventListener('submit', async (e) => 
         solicitante: document.getElementById('res-solicitante').value.trim(),
         fecha: document.getElementById('res-fecha').value,
         horaInicio: document.getElementById('res-inicio').value,
-        horaFin: document.getElementById('res-fin').value,
-        motivo: document.getElementById('res-motivo').value.trim()
+        horaFin: document.getElementById('res-fin').value
     };
 
     try {
@@ -162,15 +164,15 @@ document.getElementById('form-reserva').addEventListener('submit', async (e) => 
         const data = await res.json();
 
         if (!res.ok) {
-            mostrarAlerta(data.message, 'danger');
+            mostrarAlerta(data.message, true);
             return;
         }
 
-        mostrarAlerta('Reserva realizada exitosamente.', 'success');
+        mostrarAlerta('Reserva realizada exitosamente.');
         e.target.reset();
         cargarReservas();
     } catch {
-        mostrarAlerta('Error al realizar la reserva.', 'danger');
+        mostrarAlerta('Error al realizar la reserva.', true);
     }
 });
 
