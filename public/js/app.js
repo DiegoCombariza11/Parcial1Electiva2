@@ -1,6 +1,8 @@
-const API = '/api';
+// Acá va toda la lógica del frontend. Usamos fetch para hablar con el backend
+// y actualizamos la página sin recargarla. Al abrir la app cargamos los recursos
+// y las reservas que ya existen en la base de datos.
 
-// ---------- Utilidades ----------
+const API = '/api';
 
 function mostrarAlerta(mensaje, tipo = 'success') {
     const alerta = document.getElementById('alerta');
@@ -13,8 +15,6 @@ function mostrarAlerta(mensaje, tipo = 'success') {
 function formatearFecha(fecha) {
     return new Date(fecha).toLocaleDateString('es-CO', { timeZone: 'UTC' });
 }
-
-// ---------- Recursos ----------
 
 async function cargarRecursos() {
     try {
@@ -85,8 +85,6 @@ async function buscarPorId() {
     }
 }
 
-// ---------- Reservas ----------
-
 async function cargarReservas() {
     try {
         const res = await fetch(`${API}/reservas`);
@@ -113,8 +111,6 @@ async function cargarReservas() {
             '<tr><td colspan="6" class="text-center text-danger">Error al cargar reservas.</td></tr>';
     }
 }
-
-// ---------- Formularios ----------
 
 document.getElementById('form-recurso').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -178,6 +174,5 @@ document.getElementById('form-reserva').addEventListener('submit', async (e) => 
     }
 });
 
-// ---------- Inicializar ----------
 cargarRecursos();
 cargarReservas();

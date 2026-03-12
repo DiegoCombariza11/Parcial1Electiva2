@@ -1,23 +1,23 @@
+// Lo más importante de este archivo es la función createReserva.
+// Antes de guardar la reserva, revisamos si el auditorio ya está ocupado
+// en esa fecha y en ese rango de horas. Si hay un choque, avisamos al usuario.
+
 import Reserva from '../models/reserva.mjs';
 import Recurso from '../models/recurso.mjs';
 
-// Crear una reserva con validación de disponibilidad
 async function createReserva(req, res) {
     try {
         const { recurso, solicitante, fecha, horaInicio, horaFin, motivo } = req.body;
 
-        // Validar que el recurso existe y está activo
         const recursoExiste = await Recurso.findById(recurso);
         if (!recursoExiste || !recursoExiste.isActive) {
             return res.status(404).json({ state: false, message: 'El recurso no existe o está inactivo' });
         }
 
-        // Validar que horaFin > horaInicio
         if (horaFin <= horaInicio) {
             return res.status(400).json({ state: false, message: 'La hora de fin debe ser posterior a la hora de inicio' });
         }
 
-        // Validar disponibilidad: buscar reservas que se traslapen en el mismo recurso y fecha
         const fechaDate = new Date(fecha);
         const reservasExistentes = await Reserva.find({
             recurso,
@@ -27,7 +27,6 @@ async function createReserva(req, res) {
             }
         });
 
-        // Verificar traslape de horarios
         const hayConflicto = reservasExistentes.some(r => {
             return horaInicio < r.horaFin && horaFin > r.horaInicio;
         });
@@ -49,7 +48,6 @@ async function createReserva(req, res) {
     }
 }
 
-// Obtener todas las reservas
 async function getAllReservas(req, res) {
     try {
         const reservas = await Reserva.find().populate('recurso').sort({ fecha: 1 });

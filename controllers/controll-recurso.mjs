@@ -1,6 +1,5 @@
 import Recurso from '../models/recurso.mjs';
 
-// Crear un recurso
 async function createRecurso(req, res) {
     try {
         const recurso = new Recurso(req.body);
@@ -11,7 +10,6 @@ async function createRecurso(req, res) {
     }
 }
 
-// Obtener todos los recursos activos
 async function getAllRecursos(req, res) {
     try {
         const recursos = await Recurso.find({ isActive: true }).sort({ nombre: 1 });
@@ -21,7 +19,6 @@ async function getAllRecursos(req, res) {
     }
 }
 
-// Obtener un recurso por ID
 async function getRecursoById(req, res) {
     try {
         const recurso = await Recurso.findById(req.params.id);
