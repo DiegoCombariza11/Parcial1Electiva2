@@ -1,20 +1,16 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-//pasar luego a un archivo .env
-const uri = 'mongodb://localhost:27017/apimongo'; 
-//proximamente, conectar con atlas, para eso se debe crear un cluster y obtener la uri de conexión, que se verá algo así:
-//const uri = 'mongodb+srv://<username>:<password>@cluster0.mongodb.net/apimongo?retryWrites=true&w=majority';
-
-//también se puede dejar el nombre de la db como variable externa
-//const dbName = 'apimongo';
+dotenv.config();
 
 async function connectDB() {
-	try {
-		await mongoose.connect(uri);
-		console.log('MongoDB connected');
-	} catch (error) {
-		console.error('MongoDB connection error:', error);
-	}
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB conectado:', mongoose.connection.host);
+    } catch (error) {
+        console.error('Error al conectar con MongoDB:', error);
+        process.exit(1);
+    }
 }
 
 export default connectDB;

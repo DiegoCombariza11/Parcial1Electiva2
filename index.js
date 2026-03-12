@@ -1,25 +1,40 @@
 import express from 'express';
-import routesAuthor from './routes/author.js';
-import routesBook from './routes/book.js';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import connectDB from './drivers/connect-db.mjs';
+import recursoRoutes from './routes/recurso.mjs';
+import reservaRoutes from './routes/reserva.mjs';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
-
+const PORT = process.env.PORT || 3400;
 
 // Conectar a MongoDB
 connectDB();
 
-const PORT = 3400;
-
-// Middleware para parsear JSON
+// Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(join(__dirname, 'public')));
 
+// Motor de vistas EJS
+app.set('view engine', 'ejs');
+app.set('views', join(__dirname, 'views'));
 
-//para manejar una única ruta
+// Rutas API
+app.use('/api/recursos', recursoRoutes);
+app.use('/api/reservas', reservaRoutes);
 
-app.use('/author', routesAuthor);
-app.use('/book', routesBook);
+// Ruta principal - vista
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Sistema de Reservas - UPTC Sogamoso' });
+});
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

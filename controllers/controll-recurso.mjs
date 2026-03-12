@@ -1,0 +1,37 @@
+import Recurso from '../models/recurso.mjs';
+
+// Crear un recurso
+async function createRecurso(req, res) {
+    try {
+        const recurso = new Recurso(req.body);
+        await recurso.save();
+        res.status(201).json({ state: true, message: 'Recurso creado exitosamente', data: recurso });
+    } catch (error) {
+        res.status(400).json({ state: false, message: error.message });
+    }
+}
+
+// Obtener todos los recursos activos
+async function getAllRecursos(req, res) {
+    try {
+        const recursos = await Recurso.find({ isActive: true }).sort({ nombre: 1 });
+        res.status(200).json({ state: true, data: recursos, total: recursos.length });
+    } catch (error) {
+        res.status(500).json({ state: false, message: error.message });
+    }
+}
+
+// Obtener un recurso por ID
+async function getRecursoById(req, res) {
+    try {
+        const recurso = await Recurso.findById(req.params.id);
+        if (!recurso || !recurso.isActive) {
+            return res.status(404).json({ state: false, message: 'Recurso no encontrado' });
+        }
+        res.status(200).json({ state: true, data: recurso });
+    } catch (error) {
+        res.status(500).json({ state: false, message: error.message });
+    }
+}
+
+export { createRecurso, getAllRecursos, getRecursoById };
