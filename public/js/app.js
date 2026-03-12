@@ -32,12 +32,12 @@ async function cargarRecursos() {
 
         lista.innerHTML = data.data.map(r => `
             <div class="border-bottom p-3">
+                <span class="badge bg-secondary me-2">ID: ${r.id}</span>
                 <strong>${r.nombre}</strong>
                 <span class="badge bg-primary ms-2">${r.capacidad} personas</span>
                 <br>
                 <small class="text-muted">${r.ubicacion}</small>
                 ${r.descripcion ? `<br><small>${r.descripcion}</small>` : ''}
-                <br><small class="text-secondary">ID: ${r._id}</small>
             </div>
         `).join('');
 
@@ -72,11 +72,10 @@ async function buscarPorId() {
         div.innerHTML = `
             <div class="card border-info">
                 <div class="card-body">
-                    <h6 class="card-title">${r.nombre}</h6>
+                    <h6 class="card-title"><span class="badge bg-secondary me-2">ID: ${r.id}</span>${r.nombre}</h6>
                     <p class="mb-1"><strong>Capacidad:</strong> ${r.capacidad} personas</p>
                     <p class="mb-1"><strong>Ubicación:</strong> ${r.ubicacion}</p>
                     ${r.descripcion ? `<p class="mb-1"><strong>Descripción:</strong> ${r.descripcion}</p>` : ''}
-                    <small class="text-muted">ID: ${r._id}</small>
                 </div>
             </div>
         `;
@@ -115,6 +114,7 @@ async function cargarReservas() {
 document.getElementById('form-recurso').addEventListener('submit', async (e) => {
     e.preventDefault();
     const body = {
+        id: Number(document.getElementById('r-id').value),
         nombre: document.getElementById('r-nombre').value.trim(),
         capacidad: Number(document.getElementById('r-capacidad').value),
         ubicacion: document.getElementById('r-ubicacion').value.trim(),

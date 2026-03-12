@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const recursoSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: [true, 'El ID del recurso es obligatorio'],
+        unique: true
+    },
     nombre: {
         type: String,
         required: [true, 'El nombre del recurso es obligatorio'],

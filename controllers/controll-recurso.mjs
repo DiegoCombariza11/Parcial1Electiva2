@@ -21,8 +21,8 @@ async function getAllRecursos(req, res) {
 
 async function getRecursoById(req, res) {
     try {
-        const recurso = await Recurso.findById(req.params.id);
-        if (!recurso || !recurso.isActive) {
+        const recurso = await Recurso.findOne({ id: req.params.id, isActive: true });
+        if (!recurso) {
             return res.status(404).json({ state: false, message: 'Recurso no encontrado' });
         }
         res.status(200).json({ state: true, data: recurso });
