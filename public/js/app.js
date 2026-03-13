@@ -1,6 +1,3 @@
-// Acá va toda la lógica del frontend. Usamos fetch para hablar con el backend
-// y actualizamos la página sin recargarla. Al abrir la app cargamos los recursos
-// y las reservas que ya existen en la base de datos.
 
 const API = '/api';
 
