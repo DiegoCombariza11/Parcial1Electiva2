@@ -2,6 +2,11 @@ import Recurso from '../models/recurso.mjs';
 
 async function createRecurso(req, res) {
     try {
+        // Validar nombre duplicado
+        const nombreExistente = await Recurso.findOne({ nombre: req.body.nombre });
+        if (nombreExistente) {
+            return res.status(400).json({ state: false, message: `Ya existe un recurso con el nombre "${req.body.nombre}". Por favor usa un nombre diferente.` });
+        }
         const recurso = new Recurso(req.body);
         await recurso.save();
         res.status(201).json({ state: true, message: 'Recurso creado exitosamente', data: recurso });
