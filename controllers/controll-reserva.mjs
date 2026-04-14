@@ -1,9 +1,4 @@
-// Lo más importante de este archivo es la función createReserva.
-// Antes de guardar la reserva, revisamos si el auditorio ya está ocupado
-// en esa fecha y en ese rango de horas. Si hay un choque, avisamos al usuario.
-
-import Reserva from '../models/reserva.mjs';
-import Recurso from '../models/recurso.mjs';
+import Reserva from '../models/Reserva.mjs';
 
 async function createReserva(req, res) {
     try {
