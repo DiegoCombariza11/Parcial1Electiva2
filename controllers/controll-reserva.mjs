@@ -1,4 +1,5 @@
 import Reserva from '../models/Reserva.mjs';
+import Recurso from '../models/recurso.mjs';
 
 async function createReserva(req, res) {
     try {
