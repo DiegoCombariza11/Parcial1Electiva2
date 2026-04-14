@@ -1,9 +1,14 @@
-import Reserva from '../models/Reserva.mjs';
+import Reserva from '../models/reserva.mjs';
 import Recurso from '../models/recurso.mjs';
 
 async function createReserva(req, res) {
     try {
-        const { recurso, solicitante, fecha, horaInicio, horaFin } = req.body;
+        const { recurso, fecha, horaInicio, horaFin } = req.body;
+        const solicitante = req.user?.email || req.body.solicitante;
+
+        if (!solicitante) {
+            return res.status(400).json({ state: false, message: 'El solicitante es obligatorio' });
+        }
 
         const recursoExiste = await Recurso.findById(recurso);
         if (!recursoExiste || !recursoExiste.isActive) {
