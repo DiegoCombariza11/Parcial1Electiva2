@@ -8,6 +8,8 @@ import { dirname, join } from 'path';
 import connectDB from './drivers/connect-db.mjs';
 import recursoRoutes from './routes/recurso.mjs';
 import reservaRoutes from './routes/reserva.mjs';
+import authRoutes from './routes/auth.mjs';
+import { verificarToken } from './middlewares/auth.mjs';
 
 dotenv.config();
 
@@ -26,8 +28,12 @@ app.use(express.static(join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
 
-app.use('/api/recursos', recursoRoutes);
-app.use('/api/reservas', reservaRoutes);
+// Rutas públicas (no requieren token)
+app.use('/api/auth', authRoutes);
+
+// Rutas protegidas (requieren token JWT)
+app.use('/api/recursos', verificarToken, recursoRoutes);
+app.use('/api/reservas', verificarToken, reservaRoutes);
 
 app.get('/', (req, res) => {
     res.render('index', { title: 'Sistema de Reservas - UPTC Sogamoso' });
