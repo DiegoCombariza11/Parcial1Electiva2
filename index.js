@@ -38,6 +38,10 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Sistema de Reservas - UPTC Sogamoso' });
 });
 
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

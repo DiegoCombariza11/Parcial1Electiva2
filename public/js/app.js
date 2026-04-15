@@ -1,5 +1,31 @@
-
 const API = '/api';
+
+// Verificar sesión activa
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = '/login';
+}
+
+// Mostrar nombre del usuario en navbar
+const usuarioGuardado = JSON.parse(localStorage.getItem('usuario') || '{}');
+const navUsuario = document.getElementById('nav-usuario');
+if (navUsuario && usuarioGuardado.nombre) {
+    navUsuario.textContent = `Hola, ${usuarioGuardado.nombre}`;
+}
+
+function cerrarSesion() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    window.location.href = '/login';
+}
+
+// Headers con token para todas las peticiones protegidas
+function authHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
 
 function mostrarAlerta(mensaje, esError = false) {
     const alerta = document.getElementById('alerta');
@@ -19,9 +45,14 @@ function formatearFecha(fecha) {
 
 async function cargarRecursos() {
     try {
-        const res = await fetch(`${API}/recursos`);
-        const data = await res.json();
+        const res = await fetch(`${API}/recursos`, { headers: authHeaders() });
 
+        if (res.status === 401 || res.status === 403) {
+            cerrarSesion();
+            return;
+        }
+
+        const data = await res.json();
         const lista = document.getElementById('lista-recursos');
         const select = document.getElementById('res-recurso');
 
@@ -61,7 +92,7 @@ async function buscarPorId() {
     }
 
     try {
-        const res = await fetch(`${API}/recursos/${id}`);
+        const res = await fetch(`${API}/recursos/${id}`, { headers: authHeaders() });
         const data = await res.json();
 
         if (!res.ok) {
@@ -87,7 +118,7 @@ async function buscarPorId() {
 
 async function cargarReservas() {
     try {
-        const res = await fetch(`${API}/reservas`);
+        const res = await fetch(`${API}/reservas`, { headers: authHeaders() });
         const data = await res.json();
         const tbody = document.getElementById('tabla-reservas');
 
@@ -124,7 +155,7 @@ document.getElementById('form-recurso').addEventListener('submit', async (e) => 
     try {
         const res = await fetch(`${API}/recursos`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders(),
             body: JSON.stringify(body)
         });
         const data = await res.json();
@@ -155,7 +186,7 @@ document.getElementById('form-reserva').addEventListener('submit', async (e) => 
     try {
         const res = await fetch(`${API}/reservas`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders(),
             body: JSON.stringify(body)
         });
         const data = await res.json();
